@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Orbitron:wght@700&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  /* ===== TOP BAR ===== */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .kick-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 30px;
+    padding: 6px 14px 6px 8px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    animation: float 4s ease-in-out infinite;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  @keyframes float {
+    0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)}
+  }
+
+  .kick-icon {
+    width: 20px; height: 20px;
+    background: #53FC18;
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .kick-icon svg { width: 12px; height: 12px; fill: #000; }
+
+  .pill-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  .pill-divider {
+    width: 1px; height: 16px;
+    background: rgba(255,255,255,0.18);
+  }
+
+  .pill-text {
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    min-width: 130px;
+  }
+  .pill-text.green { color: #53FC18; font-weight: 700; }
+  .pill-text.out { opacity: 0; transform: translateY(-6px); }
+
+  /* shine sweep */
+  .kick-pill::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -80%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    border-radius: 30px;
+    animation: sweep 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .kick-pill { position: relative; overflow: hidden; }
+  @keyframes sweep { 0%{left:-80%} 40%,100%{left:150%} }
+
+  /* ===== SUPPORTERS CARD ===== */
+  .supporters-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    padding: 10px 14px 12px;
+    width: 260px;
+    animation: float 4s ease-in-out infinite 0.3s;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .heart-icon {
+    width: 18px; height: 18px;
+    background: rgba(255,80,120,0.2);
+    border-radius: 5px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .heart-icon svg { width: 10px; height: 10px; fill: #ff5078; }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .supporters-scroll-wrap {
+    height: 90px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* fade top/bottom */
+  .supporters-scroll-wrap::before,
+  .supporters-scroll-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 20px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .supporters-scroll-wrap::before {
+    top: 0;
+    background: linear-gradient(180deg, rgba(20,20,35,0.6) 0%, transparent 100%);
+  }
+  .supporters-scroll-wrap::after {
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(20,20,35,0.6) 0%, transparent 100%);
+  }
+
+  .supporters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: scrollUp 12s linear infinite;
+  }
+
+  @keyframes scrollUp {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  .supporter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rank-num {
+    font-size: 10px;
+    color: rgba(255,255,255,0.25);
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+    font-family: 'Orbitron', monospace;
+  }
+
+  .supporter-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+    flex-shrink: 0;
+    color: #fff;
+  }
+
+  .supporter-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .supporter-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.2;
+  }
+
+  .supporter-amount {
+    font-size: 10px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.2;
+  }
+
+  .supporter-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .badge-gold { background: rgba(255,200,50,0.15); color: #ffc832; border: 1px solid rgba(255,200,50,0.25); }
+  .badge-silver { background: rgba(180,190,210,0.12); color: #b4bcd2; border: 1px solid rgba(180,190,210,0.2); }
+  .badge-bronze { background: rgba(180,110,60,0.15); color: #c87840; border: 1px solid rgba(180,110,60,0.2); }
+  .badge-supporter { background: rgba(83,252,24,0.1); color: #53FC18; border: 1px solid rgba(83,252,24,0.2); }
+
+  /* avatar colors */
+  .av-1 { background: linear-gradient(135deg, #ff5f6d, #ffc371); }
+  .av-2 { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .av-3 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  .av-4 { background: linear-gradient(135deg, #fa709a, #fee140); }
+  .av-5 { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+  .av-6 { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .av-7 { background: linear-gradient(135deg, #4facfe, #43e97b); }
+  .av-8 { background: linear-gradient(135deg, #fda085, #f6d365); }
+
+  /* pulse ring on card */
+  .supporters-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    animation: pulseCard 3s ease-out infinite;
+    pointer-events: none;
+  }
+  .supporters-card { position: relative; }
+  @keyframes pulseCard {
+    0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.03);opacity:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="kick-pill">
+    <div class="kick-icon">
+      <svg viewBox="0 0 16 16"><path d="M2 2h3v5l3-5h4l-4 5.5 4 5.5H8l-3-5v5H2z"/></svg>
+    </div>
+    <span class="pill-name">iD7mmmy</span>
+    <div class="pill-divider"></div>
+    <span class="pill-text green" id="rotText">kick.com/iD7mmmy</span>
+  </div>
+</div>
+
+<!-- SUPPORTERS CARD -->
+<div class="supporters-card">
+  <div class="card-header">
+    <div class="heart-icon">
+      <svg viewBox="0 0 16 16"><path d="M8 13.5S1.5 9.5 1.5 5.5a3 3 0 0 1 6-1 3 3 0 0 1 6 1c0 4-6.5 8-6.5 8z"/></svg>
+    </div>
+    <span class="card-title">آخر الداعمين</span>
+  </div>
+
+  <div class="supporters-scroll-wrap">
+    <div class="supporters-list" id="supportersList">
+      <!-- يتكرر تلقائي بالـ JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================
+// بيانات الداعمين — عدّل هنا
+// =====================
+const supporters = [
+  { name: 'عبدالله', amount: '500 كيك', badge: 'gold', av: 'av-1' },
+  { name: 'محمد_X', amount: '350 كيك', badge: 'gold', av: 'av-2' },
+  { name: 'سلطان', amount: '200 كيك', badge: 'silver', av: 'av-3' },
+  { name: 'فيصل99', amount: '150 كيك', badge: 'silver', av: 'av-4' },
+  { name: 'نواف', amount: '100 كيك', badge: 'bronze', av: 'av-5' },
+  { name: 'خالد_gg', amount: '80 كيك', badge: 'bronze', av: 'av-6' },
+  { name: 'أحمد', amount: '50 كيك', badge: 'supporter', av: 'av-7' },
+  { name: 'يوسف', amount: '30 كيك', badge: 'supporter', av: 'av-8' },
+];
+
+const badgeLabel = { gold: '🥇 ذهبي', silver: '🥈 فضي', bronze: '🥉 برونزي', supporter: '💚 داعم' };
+const badgeClass = { gold: 'badge-gold', silver: 'badge-silver', bronze: 'badge-bronze', supporter: 'badge-supporter' };
+
+function buildList(arr) {
+  return arr.map((s, i) => `
+    <div class="supporter-row">
+      <span class="rank-num">${i+1}</span>
+      <div class="supporter-avatar ${s.av}">${s.name.charAt(0)}</div>
+      <div class="supporter-info">
+        <span class="supporter-name">${s.name}</span>
+        <span class="supporter-amount">${s.amount}</span>
+      </div>
+      <span class="supporter-badge ${badgeClass[s.badge]}">${badgeLabel[s.badge]}</span>
+    </div>
+  `).join('');
+}
+
+// نضاعف القائمة للـ loop
+const list = document.getElementById('supportersList');
+list.innerHTML = buildList(supporters) + buildList(supporters);
+
+// Rotating text
+const phrases = [
+  { t: 'kick.com/iD7mmmy', g: true },
+  { t: 'رابط الدعم موجود بالكيك 🤍', g: false },
+];
+let idx = 0;
+const el = document.getElementById('rotText');
+setInterval(() => {
+  el.classList.add('out');
+  setTimeout(() => {
+    idx = (idx + 1) % phrases.length;
+    el.textContent = phrases[idx].t;
+    el.className = 'pill-text' + (phrases[idx].g ? ' green' : '');
+  }, 400);
+}, 3000);
+</script>
+</body>
+</html>
