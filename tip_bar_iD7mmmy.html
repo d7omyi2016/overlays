@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@700;900&family=Orbitron:wght@600;700&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: transparent;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 12px;
+  overflow: hidden;
+}
+
+/* ── wrapper ── */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0px;
+  width: 620px;
+}
+
+/* ── label chip ── */
+.label-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 5px 16px 8px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.dollar-icon {
+  width: 20px; height: 20px;
+  background: #53FC18;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.dollar-icon svg { width: 11px; height: 11px; fill: #000; }
+
+.label-text {
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+/* ── main bar ── */
+.bar {
+  width: 100%;
+  height: 52px;
+  border-radius: 0 0 18px 18px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(10,10,15,0.7);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* left accent */
+.bar-accent {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #53FC18 0%, rgba(83,252,24,0.1) 100%);
+  border-radius: 0 2px 2px 0;
+}
+
+/* shimmer */
+.bar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -60%;
+  width: 40%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: shimmer 7s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes shimmer { 0%{left:-60%} 50%,100%{left:130%} }
+
+/* scan line */
+.bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(83,252,24,0.0) 20%,
+    rgba(83,252,24,0.25) 50%,
+    rgba(83,252,24,0.0) 80%,
+    transparent 100%);
+  animation: scan 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes scan {
+  0%,100% { opacity: 0.3; transform: scaleX(0.5); }
+  50%      { opacity: 1;   transform: scaleX(1); }
+}
+
+/* ── scroll track ── */
+.scroll-track {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+  overflow: hidden;
+}
+
+/* fade edges */
+.scroll-track::before,
+.scroll-track::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 60px;
+  z-index: 2;
+  pointer-events: none;
+}
+.scroll-track::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(10,10,15,0.85) 0%, transparent 100%);
+}
+.scroll-track::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(10,10,15,0.85) 0%, transparent 100%);
+}
+
+.scroll-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── text pieces ── */
+.s-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  color: #53FC18;
+  letter-spacing: 1px;
+  text-shadow: 0 0 14px rgba(83,252,24,0.45);
+}
+
+.s-amount {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  color: #fff;
+  margin: 0 6px 0 12px;
+}
+
+.s-msg {
+  font-family: 'Tajawal', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+}
+
+.s-dot {
+  width: 4px; height: 4px;
+  background: rgba(83,252,24,0.4);
+  border-radius: 50%;
+  margin: 0 24px;
+  flex-shrink: 0;
+}
+
+.s-diamond {
+  color: rgba(255,255,255,0.12);
+  font-size: 10px;
+  margin: 0 28px;
+  letter-spacing: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="label-chip">
+    <div class="dollar-icon">
+      <svg viewBox="0 0 12 14"><text x="1" y="11" font-size="11" font-weight="900" font-family="Arial">$</text></svg>
+    </div>
+    <span class="label-text">آخر داعم</span>
+  </div>
+
+  <div class="bar">
+    <div class="bar-accent"></div>
+    <div class="scroll-track">
+      <div class="scroll-inner" id="scrollInner"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════
+//  عدّل هنا فقط
+// ════════════════════════════════
+const donor = {
+  name:   'عبدالله',
+  amount: '500 كيك',
+  msg:    'شكراً على دعمك 🤍'
+};
+// ════════════════════════════════
+
+function buildSegment() {
+  return `
+    <span class="s-name">${donor.name}</span>
+    <span class="s-amount">${donor.amount}</span>
+    <span class="s-msg">${donor.msg}</span>
+    <span class="s-diamond">◆ ◆ ◆</span>
+  `;
+}
+
+// نضاعف النص للـ seamless loop
+const inner = document.getElementById('scrollInner');
+inner.innerHTML = buildSegment().repeat(6);
+</script>
+
+</body>
+</html>
