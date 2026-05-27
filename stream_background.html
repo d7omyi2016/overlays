@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stream Background</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  .bg {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(160deg, #f9f9f9 0%, #ebebeb 40%, #d8d8d8 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .noise {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .circle-blur {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .circles-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .pulse-circle {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px solid var(--color);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+    animation: pulsate var(--dur) ease-out var(--delay) infinite;
+  }
+  @keyframes pulsate {
+    0%   { opacity: 0;    transform: translate(-50%, -50%) scale(0.3); }
+    20%  { opacity: var(--max-op); }
+    80%  { opacity: var(--max-op); }
+    100% { opacity: 0;    transform: translate(-50%, -50%) scale(1); }
+  }
+  .glow-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(180,180,180,0.35);
+    animation: ringPulse var(--rdur) ease-in-out var(--rdel) infinite;
+    pointer-events: none;
+  }
+  @keyframes ringPulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50%       { transform: scale(1.08); opacity: 0.08; }
+  }
+  .wave-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200%;
+    opacity: 0.07;
+    animation: waveMove 18s linear infinite;
+  }
+  @keyframes waveMove {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .center-text {
+    text-align: center;
+    z-index: 10;
+    position: relative;
+  }
+  .center-text h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #555;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+  }
+  .center-text p {
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
+    color: #999;
+    letter-spacing: 0.2em;
+  }
+  @keyframes blobMove1 { from{transform:translate(0,0) scale(1);} to{transform:translate(40px,30px) scale(1.1);} }
+  @keyframes blobMove2 { from{transform:translate(0,0) scale(1);} to{transform:translate(-30px,-20px) scale(1.08);} }
+  @keyframes blobMove3 { from{transform:translate(0,0) scale(1);} to{transform:translate(20px,35px) scale(1.12);} }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="noise"></div>
+
+  <div class="circle-blur" style="width:420px;height:420px;background:#c8c8c8;top:-80px;left:-100px;animation:blobMove1 14s ease-in-out infinite alternate;"></div>
+  <div class="circle-blur" style="width:340px;height:340px;background:#b0b0b0;bottom:-60px;right:-80px;animation:blobMove2 18s ease-in-out infinite alternate;"></div>
+  <div class="circle-blur" style="width:260px;height:260px;background:#d5d5d5;top:40%;left:55%;animation:blobMove3 11s ease-in-out infinite alternate;"></div>
+
+  <div class="glow-ring" style="width:260px;height:260px;top:50%;left:50%;margin:-130px 0 0 -130px;--rdur:8s;--rdel:0s;"></div>
+  <div class="glow-ring" style="width:380px;height:380px;top:50%;left:50%;margin:-190px 0 0 -190px;--rdur:11s;--rdel:1.5s;"></div>
+
+  <div class="circles-container" id="circles"></div>
+
+  <svg class="wave-line" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0 40 C120 10,240 70,360 40 C480 10,600 70,720 40 C840 10,960 70,1080 40 C1200 10,1320 70,1440 40 L1440 80 L0 80 Z" fill="#888"/>
+  </svg>
+
+  <div class="center-text">
+    <h1>✦ live ✦</h1>
+    <p>stream</p>
+  </div>
+</div>
+
+<script>
+const container = document.getElementById('circles');
+const colors = [
+  'rgba(160,160,160,1)',
+  'rgba(180,180,180,1)',
+  'rgba(140,140,140,1)',
+  'rgba(200,200,200,1)',
+  'rgba(120,120,120,1)',
+];
+
+function spawnCircle() {
+  const el = document.createElement('div');
+  el.className = 'pulse-circle';
+  const size = 40 + Math.random() * 140;
+  const x = 5 + Math.random() * 90;
+  const y = 5 + Math.random() * 90;
+  const dur = 5 + Math.random() * 7;
+  const delay = Math.random() * 3;
+  const maxOp = 0.12 + Math.random() * 0.22;
+  const color = colors[Math.floor(Math.random() * colors.length)];
+
+  el.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${x}%; top:${y}%;
+    --dur:${dur}s; --delay:${delay}s;
+    --max-op:${maxOp}; --color:${color};
+  `;
+  container.appendChild(el);
+  setTimeout(() => el.remove(), (dur + delay) * 1000 + 500);
+}
+
+for (let i = 0; i < 20; i++) setTimeout(spawnCircle, i * 400);
+setInterval(spawnCircle, 700);
+</script>
+</body>
+</html>
